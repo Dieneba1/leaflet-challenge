@@ -76,7 +76,7 @@ function createMap(earthquakes) {
   };
 
   // Create our map, giving it the streetmap and earthquakes layers to display on load.
-  var myMap = L.map("map", {
+  var interactivemap = L.map("map", {
     center: [
       37.09, -95.71
     ],
@@ -89,28 +89,35 @@ function createMap(earthquakes) {
   // Add the layer control to the map.
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
-  }).addTo(myMap);
-
+  }).addTo(interactivemap);
+  // create legend
+  var legend = L.control({
+    position: "bottomright"
+  });
+  console.log(L);
+      console.log(legend);
+      legend.onAdd = function () {
+          var div = L.DomUtil.create("div", "info legend");
+          var mag = [-10, 10, 30, 50, 70, 90];
+          var colors = [
+            "#98ee00",
+            "#d4ee00",
+            "#eecc00",
+            "#ee9c00",
+            "#ea822c",
+            "#ea2c2c"];
+            for (var i = 0; i < mag.length; i++) {
+              div.innerHTML += "<i style='background: "
+                + colors[i]
+                + "'></i> "
+                + mag[i]
+                + (mag[i + 1] ? "&ndash;" + mag[i + 1] + "<br>" : "+");
+            }
+            return div;
+      };
+      // Add the info legend to the map.
+legend.addTo(interactivemap);
 }
 
-// create legend
 
-var legend = L.control({
-  position: "bottomright"
-});
-console.log(L);
-    console.log(legend);
-    legend.onAdd = function () {
-        var div = L.DomUtil.create("div", "info legend");
-        var mag = [0, 1, 2, 3, 4, 5];
 
-        for (var i = 0; i < mag.length; i++) {
-            div.innerHTML +=
-                '<i style="background:' + chooseColor(mag[i] + 1) + '"></i> ' +
-                mag[i] + (mag[i + 1] ? '&ndash;' + mag[i + 1] + '<br>' : '+');
-        }
-
-        return div;
-    };
-// Add the info legend to the map.
-legend.addTo(myMap);
